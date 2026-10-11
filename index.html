@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080e19">
+<title>TRUSTOS v0.5 — Sync Prototype</title>
+<style>
+:root{--bg:#080e19;--panel:#111b2b;--line:#283850;--text:#edf4ff;--muted:#97a9c3;--mint:#6bf0c2;--blue:#89aaff;--red:#ff8295;--gold:#ffdb91}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 85% -10%,#1b3552 0,transparent 42%),var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.45}
+button,input,textarea,select{font:inherit}.wrap{max-width:1100px;margin:auto;padding:18px 15px 42px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{display:flex;gap:11px;align-items:center}.logo{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--mint),var(--blue));color:#07131b;font-size:22px;font-weight:950}.brandname{font-size:19px;font-weight:900;letter-spacing:2px}.tag{font-size:10px;color:var(--muted);letter-spacing:1.3px}.pill{font-size:10px;color:var(--mint);border:1px solid #2e6d61;background:#102b2b;padding:7px 10px;border-radius:99px;white-space:nowrap}
+.hero{padding:25px 0 15px}.eyebrow{font-size:10px;font-weight:850;letter-spacing:2px;color:var(--mint)}h1{font-size:clamp(32px,7vw,52px);line-height:1.03;letter-spacing:-1.7px;margin:12px 0}h1 span{color:var(--mint)}.hero p{max-width:720px;color:var(--muted);font-size:14px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:18px 0}.stat,.card{border:1px solid var(--line);border-radius:17px;background:linear-gradient(180deg,#121d30,#0e1726)}.stat{padding:13px}.num{font-size:21px;font-weight:900;overflow-wrap:anywhere}.small{font-size:10px;color:var(--muted);margin-top:3px}
+.notice{border:1px solid #68532e;background:#2a2317;color:var(--gold);padding:12px 14px;border-radius:13px;font-size:12px;margin:13px 0 17px}
+.nav{display:flex;gap:7px;overflow-x:auto;padding:2px 0 12px}.nav button{background:#132038;color:#b9c9e1;border:1px solid #2a3a54;border-radius:99px;padding:9px 13px;white-space:nowrap;font-size:12px;font-weight:750}.nav button.active{background:var(--mint);color:#06141a;border-color:var(--mint)}
+.layout{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:14px}.card{padding:16px;margin-bottom:14px}.card h2{font-size:16px;margin:0 0 5px}.sub{font-size:12px;color:var(--muted);margin:0 0 14px}.section{display:none}.section.active{display:block}
+label{display:block;font-size:12px;color:#cbd8eb;margin:12px 0 7px}input,textarea,select{width:100%;border:1px solid #2b3b55;background:#08111f;color:var(--text);padding:11px 12px;border-radius:11px;font-size:14px;outline:none}input:focus,textarea:focus,select:focus{border-color:var(--mint);box-shadow:0 0 0 3px #6bf0c218}textarea{min-height:80px;resize:vertical}
+.btn{border:1px solid transparent;border-radius:11px;padding:10px 12px;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:7px;cursor:pointer}.primary{background:var(--mint);color:#07151a}.secondary{background:#1a2941;color:var(--text);border-color:#33445f}.danger{background:#351a2a;color:#ff9cab;border-color:#633043}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.buttons .btn{flex:1}.status{display:none;margin-top:10px;padding:11px 12px;border-radius:10px;font-size:12px;overflow-wrap:anywhere}.status.show{display:block}.ok{background:#103027;color:#8ff3c7;border:1px solid #27614f}.bad{background:#351a24;color:#ff9cab;border:1px solid #6c3141}.hint{font-size:11px;color:var(--muted);margin-top:10px}
+.chain{display:flex;flex-direction:column;gap:10px}.block{background:#0a1322;border:1px solid var(--line);border-radius:13px;padding:13px}.blocktop{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}.blocktitle{font-size:13px;font-weight:850;overflow-wrap:anywhere}.time{font-size:10px;color:var(--muted);margin-top:4px}.blocktext{font-size:13px;color:#dbe7f8;margin:10px 0;overflow-wrap:anywhere;white-space:pre-wrap}.hashlabel{font-size:9px;color:var(--muted);margin-top:8px;letter-spacing:.7px}.hash{font-family:ui-monospace,Menlo,monospace;font-size:10px;color:var(--mint);overflow-wrap:anywhere;word-break:break-all;margin-top:3px}.tagmini{font-size:9px;color:var(--mint);border:1px solid #365b58;border-radius:99px;padding:4px 7px;white-space:nowrap}.empty{padding:26px 12px;text-align:center;color:var(--muted);border:1px dashed #34425b;border-radius:13px;font-size:13px}.hidden{display:none!important}.result{border:1px solid var(--line);background:#0a1322;border-radius:12px;padding:12px;margin-top:10px;font-size:12px;overflow-wrap:anywhere}.footer{text-align:center;color:#7889a4;font-size:11px;padding:14px}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.top{align-items:flex-start}.hero{padding-top:17px}.card{padding:14px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top"><div class="brand"><div class="logo">T</div><div><div class="brandname">TRUSTOS</div><div class="tag">SYNC-READY TRUST LEDGER</div></div></div><div class="pill">● PROTOTİP v0.4</div></header>
+<section class="hero"><div class="eyebrow">AŞAMA 5 · GÜVENLİ ÜYELİK KONTROLÜ</div><h1>Tek cihazdan çık.<br><span>Birlikte doğrula.</span></h1><p>TRUSTOS v0.5 yerel kayıt defterini korur ve Firebase Firestore ile bulut eşitlemesi için bağlantı alanı ekler. Bulut bağlantısı, Firebase projesi ve güvenlik kuralları yapılandırıldıktan sonra etkinleşir.</p></section>
+<div class="stats"><div class="stat"><div class="num" id="count">0</div><div class="small">YEREL KAYIT</div></div><div class="stat"><div class="num" id="integrity">BOŞ</div><div class="small">ZİNCİR DURUMU</div></div><div class="stat"><div class="num" id="cloudState">KAPALI</div><div class="small">BULUT BAĞLANTISI</div></div><div class="stat"><div class="num" id="lastHash">—</div><div class="small">SON HASH</div></div></div>
+<div class="notice"><b>Önemli güvenlik notu:</b> Bu hâlâ prototiptir. Firebase web config değerleri tek başına gizli anahtar değildir; asıl koruma Authentication ve Firestore Security Rules ile sağlanır. Aşağıdaki örnek kurallar herkese açık yazma izni vermez. Gerçek kullanıcı verisi eklemeden önce erişim modelini tamamla.</div>
+<nav class="nav"><button class="active" data-tab="ledger">Kayıt defteri</button><button data-tab="cloud">Bulut bağlantısı</button><button data-tab="backup">Yedekleme</button><button data-tab="security">Güvenlik & kurulum</button></nav>
+<div class="section active" id="tab-ledger">
+<div class="layout">
+<div>
+<section class="card"><h2>Yeni kayıt</h2><p class="sub">Her kayıt öncekinin hash'ine bağlanır.</p><form id="recordForm"><label for="title">Başlık</label><input id="title" maxlength="120" placeholder="Örn. Demo teslimat #104" required><label for="category">Kategori</label><select id="category"><option>Genel</option><option>Belge</option><option>Teslimat</option><option>İşlem</option><option>Fikir</option><option>Diğer</option></select><label for="details">Açıklama</label><textarea id="details" maxlength="5000" placeholder="Neyi kayda geçiriyorsun? Gizli veri ekleme." required></textarea><div class="buttons"><button class="btn primary" type="submit">＋ Kaydı mühürle</button></div></form><div id="formStatus" class="status"></div></section>
+<section class="card"><h2>Arama ve doğrulama</h2><input id="search" placeholder="Kayıtlarda ara…"><div class="buttons"><button class="btn secondary" id="verifyBtn">✓ Zinciri doğrula</button><button class="btn secondary" id="exportBtn">↓ JSON yedeği</button></div><div id="verifyStatus" class="status"></div><div class="hint" id="searchCount">0 kayıt</div></section>
+</div>
+<section class="card"><h2>Kayıt zinciri</h2><p class="sub">Kayıtlar en yeniden eskiye listelenir.</p><div id="chain" class="chain"></div></section>
+</div>
+</div>
+<div class="section" id="tab-cloud">
+<div class="layout">
+<section class="card"><h2>Firebase bağlantısı</h2><p class="sub">Firebase Console'dan Web App oluştur ve yapılandırma bilgilerini buraya gir. Ayarlar bu tarayıcıda saklanır.</p>
+<label for="apiKey">apiKey</label><input id="apiKey" autocomplete="off" placeholder="AIza…">
+<label for="authDomain">authDomain</label><input id="authDomain" autocomplete="off" placeholder="projen.firebaseapp.com">
+<label for="projectId">projectId</label><input id="projectId" autocomplete="off" placeholder="proje-kimligi">
+<label for="appId">appId</label><input id="appId" autocomplete="off" placeholder="1:…:web:…">
+<div class="buttons"><button class="btn primary" id="saveConfigBtn">Ayarları kaydet</button><button class="btn secondary" id="connectBtn">Buluta bağlan</button></div>
+<div id="cloudStatus" class="status"></div>
+<div class="result"><b>Oturum kimliği (UID)</b><div id="uidDisplay" style="overflow-wrap:anywhere;margin:8px 0;font-family:monospace">Henüz bağlanmadı</div><button class="btn secondary" id="copyUidBtn" type="button">UID kopyala</button></div>
+<p class="hint">Bu sürüm Firebase modüllerini CDN üzerinden yükler; GitHub Pages gibi HTTPS ortamında aç. Ağ bağlantısı gerekir.</p>
+</section>
+<section class="card"><h2>Bulut eşitleme</h2><p class="sub">Bağlandıktan sonra yerel kayıtlarını bir çalışma alanına gönderebilir veya buluttaki kayıtları içeri alabilirsin.</p>
+<label for="workspace">Çalışma alanı kimliği</label><input id="workspace" maxlength="80" placeholder="Örn. trustos-demo-01">
+<div class="buttons"><button class="btn primary" id="pushBtn">Yerel kayıtları buluta yükle</button><button class="btn secondary" id="pullBtn">Buluttan kayıtları al</button></div>
+<div id="syncStatus" class="status"></div>
+<div class="result"><b>Üyelik durumu</b><div id="membershipStatus">Önce Firebase'e bağlan.</div><div id="membershipPath" style="overflow-wrap:anywhere;font-family:monospace;margin-top:8px"></div><button class="btn secondary" id="checkMemberBtn" type="button">Üyeliği kontrol et</button></div>
+<div class="result"><b>İlk kurulum için yönetici adımı</b><br>Güvenlik kuralları herkese açık üyelik oluşturulmasına izin vermez. Firebase Console → Firestore Database → Data bölümünde, bu çalışma alanı için <code>workspaces / ÇALIŞMA_ALANI / members / UID</code> yolunda bir belgeyi yönetici olarak oluştur. Belge alanı olarak <code>role</code> = <code>owner</code> ekle. Aşağıdaki çalışma alanı ve UID değerlerini aynen kullan. Bunu yalnızca güvendiğin kullanıcılar için yap.</div>
+<div class="result"><b>Çakışma politikası:</b> Bu prototip bulut verisini otomatik olarak birleştirmez. Buluttan içe aktarma mevcut yerel zincirin yerine geçebilir; önce JSON yedeği al. Birden fazla cihazın aynı anda yazması için sunucu tarafı kurallar ve daha gelişmiş bir eşitleme modeli gerekir.</div>
+</section>
+</div>
+</div>
+<div class="section" id="tab-backup">
+<div class="layout">
+<section class="card"><h2>Yedekle</h2><p class="sub">Yerel zinciri JSON olarak indir.</p><div class="buttons"><button class="btn primary" id="downloadBackupBtn">JSON indir</button><button class="btn secondary" id="csvBtn">CSV indir</button></div><div id="backupStatus" class="status"></div></section>
+<section class="card"><h2>Geri yükle</h2><p class="sub">Yalnızca hash ve bağlantı kontrolünden geçen JSON zincirleri kabul edilir.</p><label for="importFile">JSON yedek dosyası</label><input id="importFile" type="file" accept=".json,application/json"><div id="importStatus" class="status"></div><div class="buttons"><button class="btn danger" id="clearBtn">Yerel kayıtları sil</button></div></section>
+</div>
+</div>
+<div class="section" id="tab-security">
+<div class="layout">
+<section class="card"><h2>Kurulum adımları</h2><div class="result">1. Firebase Console'da proje oluştur.<br>2. Project settings → Your apps → Web app ekle.<br>3. Authentication → Sign-in method bölümünde Anonymous oturum açmayı etkinleştir.<br>4. Firestore Database oluştur.<br>5. Aşağıdaki kuralları Firestore Rules bölümüne ekle.<br>6. Web config alanlarını Bulut bağlantısı sekmesine gir.<br>7. Önce demo verisiyle test et.</div><p class="hint">Firebase ücretleri ve limitleri projene göre değişebilir. Canlıya almadan önce faturalandırma ve kota ayarlarını kontrol et.</p></section>
+<section class="card"><h2>Örnek Firestore güvenlik kuralları</h2><p class="sub">Bu kurallar yalnızca giriş yapmış kullanıcıların kendi UID alanlarına yazmasına izin veren başlangıç şablonudur. Uygulama tarafındaki doğrulama, güvenlik kuralının yerine geçmez.</p><textarea id="rules" readonly style="min-height:230px;font-family:monospace;font-size:11px">rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /workspaces/{workspaceId}/members/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false;
+    }
+    match /workspaces/{workspaceId}/ledgers/{ledgerId} {
+      allow read, write: if request.auth != null
+        && exists(/databases/$(database)/documents/workspaces/$(workspaceId)/members/$(request.auth.uid));
+    }
+  }
+}</textarea><div class="buttons"><button class="btn secondary" id="copyRulesBtn">Kuralları kopyala</button></div><div class="result">Not: Yukarıdaki kurallar, üyelik belgeleri güvenilir yönetim süreciyle oluşturulmadıkça yazmayı engeller. Bu HTML prototipi üyelik yönetimi sağlamaz; önce Firebase Console'da kendi UID'n için members belgesi oluşturman veya sunucu tarafında güvenli davet akışı geliştirmen gerekir. Kuralları gevşeterek herkese açık yazma açma.</div></section>
+</div>
+<section class="card"><h2>Bu sürüm ne yapıyor, ne yapmıyor?</h2><p class="sub">Şeffaf kapsam</p><div class="result"><b>Var:</b> Yerel kayıt defteri, SHA-256 hash zinciri, JSON/CSV yedek, Firebase bağlantı iskeleti, anonim oturum açma denemesi, çalışma alanı bazında yükleme/indirme.<br><br><b>Henüz yok:</b> Gerçek merkeziyetsiz ağ, düğümler arası konsensüs, dijital imza ile kayıt sahibi kanıtı, otomatik çatışma çözümü, denetlenmiş üretim güvenliği.<br><br><b>Önemli:</b> Tarayıcıdaki hash zinciri, kullanıcı cihazının tüm verileri yeniden yazmasını engellemez. Üretim sisteminde sunucu tarafı doğrulama, erişim denetimi ve bağımsız güvenlik incelemesi gerekir.</div></section>
+</div>
+<div class="footer">TRUSTOS v0.5 · Senkronizasyona hazır prototip · Güvenlik kurallarını doğrulamadan canlı veriye geçme</div>
+</div>
+<script type="module">
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+const KEY='trustos_ledger_v5', CFG='trustos_firebase_config_v1';
+const $=id=>document.getElementById(id), enc=new TextEncoder();
+let records=[], app=null, auth=null, db=null, currentUser=null;
+const hex=b=>Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');
+async function sha(text){if(!crypto?.subtle)throw new Error('SHA-256 için HTTPS gerekir.');return hex(await crypto.subtle.digest('SHA-256',enc.encode(text)));}
+function payload(r){return JSON.stringify({index:r.index,title:r.title,category:r.category,details:r.details,timestamp:r.timestamp,previousHash:r.previousHash});}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function short(s){return s?s.slice(0,14)+'…'+s.slice(-8):'—';}
+function status(id,msg,good){const el=$(id);el.textContent=msg;el.className='status show '+(good?'ok':'bad');}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(records));$('storage').textContent='CİHAZ';}catch(e){$('storage').textContent='GEÇİCİ';}}
+function load(){try{let raw=localStorage.getItem(KEY);if(!raw){const old=localStorage.getItem('trustos_ledger_v4');if(old){raw=old;localStorage.setItem(KEY,old);}}const x=JSON.parse(raw||'[]');if(Array.isArray(x))records=x;}catch(e){records=[];}}
+function download(name,text,type='application/json'){const blob=new Blob([text],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1200);}
+async function verifyChain(list){
+ if(!Array.isArray(list))return {ok:false,message:'Kayıt listesi geçersiz.'};
+ for(let i=0;i<list.length;i++){const r=list[i];if(!r||typeof r.title!=='string'||typeof r.details!=='string'||typeof r.timestamp!=='string'||typeof r.hash!=='string'||typeof r.previousHash!=='string')return {ok:false,message:`#${i+1} alanları eksik.`};if(r.index!==i+1)return {ok:false,message:`#${i+1} sıra numarası hatalı.`};if(r.previousHash!==(i===0?'GENESIS':list[i-1].hash))return {ok:false,message:`#${r.index} önceki hash bağlantısı hatalı.`};if(await sha(payload(r))!==r.hash)return {ok:false,message:`#${r.index} hash uyuşmazlığı.`};}
+ return {ok:true,message:`${list.length} kayıt doğrulandı.`};
+}
+function render(){
+ $('count').textContent=records.length;$('integrity').textContent=records.length?'KONTROL ET':'BOŞ';$('lastHash').textContent=records.length?short(records[records.length-1].hash):'—';
+ const q=$('search').value.trim().toLocaleLowerCase('tr-TR');const arr=records.filter(r=>(r.title+' '+r.details+' '+r.category).toLocaleLowerCase('tr-TR').includes(q)).slice().reverse();$('searchCount').textContent=arr.length+' / '+records.length+' kayıt';
+ $('chain').innerHTML=arr.length?arr.map(r=>`<article class="block"><div class="blocktop"><div class="blocktitle">#${r.index} · ${esc(r.title)}</div><span class="tagmini">${esc(r.category)}</span></div><div class="time">${esc(new Date(r.timestamp).toLocaleString('tr-TR'))}</div><div class="blocktext">${esc(r.details)}</div><div class="hashlabel">KAYIT HASH'İ</div><div class="hash">${esc(r.hash)}</div><div class="hashlabel">ÖNCEKİ HASH</div><div class="hash">${esc(r.previousHash)}</div></article>`).join(''):'<div class="empty">Kayıt bulunamadı.</div>';
+}
+document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.section').forEach(x=>x.classList.toggle('active',x.id==='tab-'+b.dataset.tab));}));
+$('recordForm').addEventListener('submit',async e=>{e.preventDefault();const btn=e.submitter;btn.disabled=true;try{const title=$('title').value.trim(),details=$('details').value.trim();if(!title||!details)throw new Error('Başlık ve açıklama gerekli.');const r={index:records.length+1,title,category:$('category').value,details,timestamp:new Date().toISOString(),previousHash:records.length?records[records.length-1].hash:'GENESIS'};r.hash=await sha(payload(r));records.push(r);save();render();$('recordForm').reset();status('formStatus','Kayıt oluşturuldu. Buluta göndermek için Bulut bağlantısı sekmesini kullan.',true);}catch(err){status('formStatus',err.message,false);}finally{btn.disabled=false;}});
+$('search').addEventListener('input',render);
+$('verifyBtn').addEventListener('click',async()=>{try{const x=await verifyChain(records);status('verifyStatus',x.message,x.ok);$('integrity').textContent=x.ok?'SAĞLAM':'HATA';}catch(e){status('verifyStatus',e.message,false);}});
+$('exportBtn').addEventListener('click',()=>download('trustos-yedek-v05.json',JSON.stringify({format:'TRUSTOS_LEDGER',version:5,exportedAt:new Date().toISOString(),records},null,2)));
+$('downloadBackupBtn').addEventListener('click',()=>download('trustos-yedek-v05.json',JSON.stringify({format:'TRUSTOS_LEDGER',version:5,exportedAt:new Date().toISOString(),records},null,2)));
+$('csvBtn').addEventListener('click',()=>{const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';const csv=[['index','title','category','details','timestamp','previousHash','hash'],...records.map(r=>[r.index,r.title,r.category,r.details,r.timestamp,r.previousHash,r.hash])].map(row=>row.map(q).join(',')).join('\r\n');download('trustos-kayitlar.csv','\ufeff'+csv,'text/csv;charset=utf-8');});
+$('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const data=JSON.parse(await f.text()),list=Array.isArray(data)?data:data.records;if(!Array.isArray(list))throw new Error('Kayıt listesi bulunamadı.');const x=await verifyChain(list);if(!x.ok)throw new Error(x.message);if(!confirm(list.length+' doğrulanmış kayıt mevcut kayıtların yerine yüklensin mi?'))return;records=list;save();render();status('importStatus','Geri yükleme başarılı. '+x.message,true);}catch(err){status('importStatus',err.message,false);}finally{e.target.value='';}});
+$('clearBtn').addEventListener('click',()=>{if(!confirm('Bu tarayıcıdaki tüm kayıtlar silinsin mi? Önce yedek al.'))return;records=[];save();render();status('importStatus','Yerel kayıtlar silindi.',true);});
+function readConfig(){return {apiKey:$('apiKey').value.trim(),authDomain:$('authDomain').value.trim(),projectId:$('projectId').value.trim(),appId:$('appId').value.trim()};}
+function saveConfig(){const c=readConfig();if(!c.apiKey||!c.authDomain||!c.projectId||!c.appId)throw new Error('Dört Firebase alanını da doldur.');localStorage.setItem(CFG,JSON.stringify(c));return c;}
+function loadConfig(){try{const c=JSON.parse(localStorage.getItem(CFG)||'null');if(c){$('apiKey').value=c.apiKey||'';$('authDomain').value=c.authDomain||'';$('projectId').value=c.projectId||'';$('appId').value=c.appId||'';}}catch(e){}}
+$('saveConfigBtn').addEventListener('click',()=>{try{saveConfig();status('cloudStatus','Firebase ayarları bu tarayıcıya kaydedildi. Şimdi bağlanabilirsin.',true);}catch(e){status('cloudStatus',e.message,false);}});
+$('connectBtn').addEventListener('click',async()=>{
+ try{
+  const c=saveConfig();status('cloudStatus','Firebase bağlantısı kuruluyor…',true);
+  app=getApps().length?getApps()[0]:initializeApp(c);auth=getAuth(app);db=getFirestore(app);
+  const cred=await signInAnonymously(auth);currentUser=cred.user;
+  $('cloudState').textContent='BAĞLI';$('uidDisplay').textContent=currentUser.uid;
+  status('cloudStatus','Bağlandı. UID kimliğin hazır. Bu kimlik parola değildir; erişimi Firestore güvenlik kuralları belirler.',true);
+  updateMembershipPath();
+ }catch(e){$('cloudState').textContent='HATA';status('cloudStatus','Bağlantı başarısız: '+(e.message||e.code||'Bilinmeyen hata')+'. Firebase Anonymous Auth ve Firestore ayarlarını kontrol et.',false);}
+});
+function workspacePath(){const w=$('workspace').value.trim();if(!w)throw new Error('Bir çalışma alanı kimliği gir.');if(!/^[a-zA-Z0-9_-]{3,80}$/.test(w))throw new Error('Çalışma alanı yalnızca harf, rakam, tire ve alt çizgi içerebilir (3–80 karakter).');return w;}
+$('pushBtn').addEventListener('click',async()=>{
+ try{
+  if(!db||!currentUser)throw new Error('Önce Firebase bağlantısı kur.');
+  const w=workspacePath();
+  const member=await getDoc(doc(db,'workspaces',w,'members',currentUser.uid));
+  if(!member.exists())throw new Error('Bu çalışma alanında üyeliğin yok. Üyelik durumundaki yönetici adımlarını tamamla.');
+  const check=await verifyChain(records);if(!check.ok)throw new Error('Yerel zincir hatalı: '+check.message);
+  const ref=doc(db,'workspaces',w,'ledgers',currentUser.uid);
+  await setDoc(ref,{ownerUid:currentUser.uid,format:'TRUSTOS_LEDGER',version:5,updatedAt:serverTimestamp(),records});
+  status('syncStatus','Yükleme başarılı: '+records.length+' kayıt buluta gönderildi. UID: '+currentUser.uid,true);
+ }catch(e){status('syncStatus','Yükleme başarısız: '+(e.message||e.code||'Hata')+'. Firestore kurallarının bu belgeye izin verdiğini kontrol et.',false);}
+});
+$('pullBtn').addEventListener('click',async()=>{
+ try{
+  if(!db||!currentUser)throw new Error('Önce Firebase bağlantısı kur.');
+  const w=workspacePath();
+  const member=await getDoc(doc(db,'workspaces',w,'members',currentUser.uid));
+  if(!member.exists())throw new Error('Bu çalışma alanında üyeliğin yok. Üyelik durumundaki yönetici adımlarını tamamla.');
+  const ref=doc(db,'workspaces',w,'ledgers',currentUser.uid);const snap=await getDoc(ref);
+  if(!snap.exists())throw new Error('Bu kullanıcı ve çalışma alanı için bulut kaydı bulunamadı.');
+  const data=snap.data(),list=data.records;if(!Array.isArray(list))throw new Error('Bulut belgesinde kayıt listesi yok.');
+  const check=await verifyChain(list);if(!check.ok)throw new Error('Bulut zinciri geçersiz: '+check.message);
+  if(!confirm('Buluttan '+list.length+' kayıt alınıp mevcut yerel kayıtların yerine konulsun mu? Önce yedek al.'))return;
+  records=list;save();render();status('syncStatus','Buluttan alındı ve doğrulandı. '+check.message,true);
+ }catch(e){status('syncStatus','İndirme başarısız: '+(e.message||e.code||'Hata')+'. Belge izinlerini ve çalışma alanını kontrol et.',false);}
+});
+
+function updateMembershipPath(){
+ const w=($('workspace').value||'').trim();
+ $('membershipPath').textContent=(w&&currentUser)?`Belge yolu: workspaces/${w}/members/${currentUser.uid}`:'Çalışma alanı kimliğini girip Firebase bağlantısı kur.';
+}
+$('workspace').addEventListener('input',updateMembershipPath);
+$('copyUidBtn').addEventListener('click',async()=>{
+ if(!currentUser){status('cloudStatus','Önce Firebase bağlantısı kur.',false);return;}
+ try{await navigator.clipboard.writeText(currentUser.uid);status('cloudStatus','UID kopyalandı.',true);}
+ catch(e){status('cloudStatus','Kopyalama engellendi. UID metnini basılı tutup kopyala.',false);}
+});
+$('checkMemberBtn').addEventListener('click',async()=>{
+ try{
+  if(!db||!currentUser)throw new Error('Önce Firebase bağlantısı kur.');
+  const w=workspacePath();
+  const snap=await getDoc(doc(db,'workspaces',w,'members',currentUser.uid));
+  updateMembershipPath();
+  $('membershipStatus').textContent=snap.exists()?'Üyelik belgesi bulundu. Bulut işlemlerini deneyebilirsin.':'Üyelik belgesi bulunamadı. Firebase Console’da yönetici olarak oluşturmalısın.';
+  status('syncStatus',snap.exists()?'Üyelik doğrulandı.':'Üyelik yok; yönetici adımını tamamla.',snap.exists());
+ }catch(e){$('membershipStatus').textContent=e.message||'Kontrol başarısız.';status('syncStatus','Üyelik kontrolü başarısız: '+(e.message||e.code||'Hata'),false);}
+});
+$('copyRulesBtn').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('rules').value);status('cloudStatus','Güvenlik kuralları kopyalandı.',true);}catch(e){$('rules').focus();$('rules').select();status('cloudStatus','Otomatik kopyalama engellendi. Metni seçip elle kopyala.',false);}});
+load();loadConfig();render();
+</script>
+</body>
+</html>
